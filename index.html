@@ -230,7 +230,7 @@ let lpT=null,lpD=false;
 function LP(on){if(on){lpD=false;lpT=setTimeout(()=>{lpD=true;go("menu")},700)}else clearTimeout(lpT)}
 function CP(){if(!lpD)go("perform");lpD=false}
 let CUR=null;const IC={};
-const SAT=(()=>{const d=document.createElement("div");d.style.cssText="position:fixed;top:0;visibility:hidden;padding-top:env(safe-area-inset-top,0px)";document.body.appendChild(d);const v=parseFloat(getComputedStyle(d).paddingTop)||0;d.remove();return v})(),TF=SAT>0?1:.4;
+const SAT=(()=>{const d=document.createElement("div");d.style.cssText="position:fixed;top:0;visibility:hidden;padding-top:env(safe-area-inset-top,0px)";document.body.appendChild(d);const v=parseFloat(getComputedStyle(d).paddingTop)||0;d.remove();return v})(),TF=SAT>0?1:.5;
 const PRE=u=>IC[u]||(IC[u]=Object.assign(new Image(),{src:u}));
 function setBG(c){document.documentElement.style.background=c||"";document.body.style.background=c||""}
 const smp=im=>{if(im._bg)return im._bg;try{const c=document.createElement("canvas");c.width=3;c.height=1;const x=c.getContext("2d");x.drawImage(im,0,im.naturalHeight-10,im.naturalWidth,10,0,0,3,1);const d=x.getImageData(0,0,3,1).data;im._bg=`linear-gradient(90deg,rgb(${d[0]},${d[1]},${d[2]}),rgb(${d[4]},${d[5]},${d[6]}),rgb(${d[8]},${d[9]},${d[10]}))`}catch(e){im._bg="#0e1a2b"}return im._bg};
@@ -241,9 +241,10 @@ function fit(){
  const im=PRE(CUR.src);
  if(!im.complete||!im.naturalWidth){im.onload=fit;return}
  const W=sc.clientWidth,H=sc.clientHeight,iw=im.naturalWidth,ih=im.naturalHeight,[a,b,c]=CUR.b.map(f=>f*ih);
- let s=W/iw,t0=a*s,ct=(b-a)*s,mid=(c-b)*s,bot=(ih-c)*s,d=H-(t0+ct+mid+bot);
- if(d>=0)mid+=d;else{let n=-d;const u=Math.min(n,mid*.6);mid-=u;n-=u;const v=SAT>0?0:Math.min(n,t0*.6);t0-=v;n-=v;
-  if(n>0){s=H/(a*TF+(b-a)+(c-b)*.4+(ih-c));t0=a*s*TF;ct=(b-a)*s;mid=(c-b)*s*.4;bot=(ih-c)*s}}
+ let s=W/iw;if(ih*s<H)s*=Math.min(1.06,H/(ih*s));
+ let t0=a*s,ct=(b-a)*s,mid=(c-b)*s,bot=(ih-c)*s,d=H-(t0+ct+mid+bot);
+ if(d>=0)mid+=d;else{let n=-d;const u=Math.min(n,mid*.7);mid-=u;n-=u;const v=SAT>0?0:Math.min(n,t0*.5);t0-=v;n-=v;
+  if(n>0){s=H/(a*TF+(b-a)+(c-b)*.3+(ih-c));t0=a*s*TF;ct=(b-a)*s;mid=(c-b)*s*.3;bot=(ih-c)*s}}
  const Wc=iw*s,r=Math.min(devicePixelRatio||1,3);
  pi.style.width=Wc+"px";pi.style.height=H+"px";pi.style.setProperty("--k",Wc/390);
  cv.width=Math.round(Wc*r);cv.height=Math.round(H*r);
